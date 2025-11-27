@@ -150,3 +150,55 @@ Type 'help' for list of commands.
 
 ```
 
+delv attach # allows you to attach to a running process
+
+```bash
+❯ dlv attach 42440
+Type 'help' for list of commands.
+(dlv) 
+```
+
+delv test # allows you to debug your unit tests
+
+```bash
+❯ dlv test
+Type 'help' for list of commands.
+(dlv) 
+```
+
+```bash
+❯ dlv test -- -test.v
+Type 'help' for list of commands.
+(dlv) continue
+=== RUN   TestHello_With_Assert
+--- PASS: TestHello_With_Assert (0.00s)
+=== RUN   TestHello_Table_With_Assert
+=== RUN   TestHello_Table_With_Assert/Aaron_en
+=== RUN   TestHello_Table_With_Assert/Aaron_es
+=== RUN   TestHello_Table_With_Assert/Aaron_fr
+--- PASS: TestHello_Table_With_Assert (0.00s)
+    --- PASS: TestHello_Table_With_Assert/Aaron_en (0.00s)
+    --- PASS: TestHello_Table_With_Assert/Aaron_es (0.00s)
+    --- PASS: TestHello_Table_With_Assert/Aaron_fr (0.00s)
+=== RUN   TestHello_English
+--- PASS: TestHello_English (0.00s)
+=== RUN   TestHello_Spanish
+--- PASS: TestHello_Spanish (0.00s)
+=== RUN   TestHello_French
+--- PASS: TestHello_French (0.00s)
+=== RUN   TestIsEmpty
+--- PASS: TestIsEmpty (0.00s)
+=== RUN   TestHello_Table
+=== RUN   TestHello_Table/Aaron_en
+=== RUN   TestHello_Table/Aaron_es
+=== RUN   TestHello_Table/Aaron_fr
+--- PASS: TestHello_Table (0.00s)
+    --- PASS: TestHello_Table/Aaron_en (0.00s)
+    --- PASS: TestHello_Table/Aaron_es (0.00s)
+    --- PASS: TestHello_Table/Aaron_fr (0.00s)
+PASS
+Process 58475 has exited with status 0
+(dlv) 
+(dlv) 
+```
+
