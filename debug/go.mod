@@ -1,3 +1,3 @@
-module github.com/aparandianworld/go-debug-sandbox/05
+module github.com/aparandianworld/go-debug-sandbox/debug
 
 go 1.25.4
