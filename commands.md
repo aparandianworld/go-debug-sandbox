@@ -374,3 +374,55 @@ Values returned:
 {Jane 28 39}
 {Bob 276 53}
 ```
+
+dlv trace # similar to breakpoint but it traces function calls and does not stop execution
+
+```bash
+(dlv) help trace
+Set tracepoint.
+
+        trace [name] [locspec]
+
+A tracepoint is a breakpoint that does not stop the execution of the program, instead when the tracepoint is hit a notification is displayed. See Documentation/cli/locspec.md for the syntax of locspec. If locspec is omitted a tracepoint will be set on the current line.
+
+See also: "help on", "help cond" and "help clear"
+(dlv) list
+Stopped at: 0x104d689c0
+=>   1: no source available
+(dlv) trace main.findPerson
+Tracepoint 1 set at 0x104bad84c for main.findPerson() ./main.go:15
+(dlv) continue
+People:
+{John 641 16}
+{Jane 502 85}
+{Bob 543 35}
+{Alice 104 27}
+{Tom 341 70}
+{Sally 291 74}
+{Mike 750 34}
+{Sue 409 9}
+{Bill 604 4}
+{Lily 295 60}
+{Aaron 865 51}
+{John 63 66}
+{Jane 223 38}
+{Bob 198 29}
+{Alice 364 95}
+{Tom 243 75}
+{Sally 512 15}
+{Mike 670 98}
+{Sue 11 59}
+{Bill 206 32}
+{Lily 677 32}
+{Aaron 511 20}
+{John 963 42}
+{Jane 778 58}
+{Bob 931 63}
+
+> goroutine(1): main.findPerson([]*main.Person len: 25, cap: 25, [...], "Sue")
+>> goroutine(1): main.findPerson => ((*main.Person)(0x140000a2180))
+Found: {Sue 409 9}
+Process 92492 has exited with status 0
+(dlv)
+
+```
