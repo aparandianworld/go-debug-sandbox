@@ -202,3 +202,175 @@ Process 58475 has exited with status 0
 (dlv) 
 ```
 
+dlv breakpoint | step | stepout | continue | next # control execution workflow
+
+```bash
+dlv) c
+> [Breakpoint 1] main.main() ./main.go:44 (hits goroutine(1):1 total:1) (PC: 0x10464de50)
+    39:                 }
+    40:         }
+    41:         return people
+    42: }
+    43:
+=>  44: func main() {
+    45:         people := make([]*Person, 25)
+    46:         people = populate(people)
+    47:
+    48:         fmt.Printf("People:\n")
+    49:         for _, p := range people {
+(dlv) n
+> main.main() ./main.go:45 (PC: 0x10464de60)
+    40:         }
+    41:         return people
+    42: }
+    43:
+    44: func main() {
+=>  45:         people := make([]*Person, 25)
+    46:         people = populate(people)
+    47:
+    48:         fmt.Printf("People:\n")
+    49:         for _, p := range people {
+    50:                 fmt.Printf("%v\n", *p)
+(dlv) n
+> main.main() ./main.go:46 (PC: 0x10464de98)
+    41:         return people
+    42: }
+    43:
+    44: func main() {
+    45:         people := make([]*Person, 25)
+=>  46:         people = populate(people)
+    47:
+    48:         fmt.Printf("People:\n")
+    49:         for _, p := range people {
+    50:                 fmt.Printf("%v\n", *p)
+    51:         }
+(dlv) ni
+> main.main() ./main.go:46 (PC: 0x10464de9c)
+Command failed: could not find watchpoint at address 0x10464de98
+(dlv) n
+> main.main() ./main.go:48 (PC: 0x10464deac)
+    43:
+    44: func main() {
+    45:         people := make([]*Person, 25)
+    46:         people = populate(people)
+    47:
+=>  48:         fmt.Printf("People:\n")
+    49:         for _, p := range people {
+    50:                 fmt.Printf("%v\n", *p)
+    51:         }
+    52:         fmt.Printf("\n")
+    53:
+(dlv) s
+> fmt.Printf() /opt/homebrew/Cellar/go/1.25.4/libexec/src/fmt/print.go:232 (PC: 0x104647010)
+   227:         return
+   228: }
+   229:
+   230: // Printf formats according to a format specifier and writes to standard output.
+   231: // It returns the number of bytes written and any write error encountered.
+=> 232: func Printf(format string, a ...any) (n int, err error) {
+   233:         return Fprintf(os.Stdout, format, a...)
+   234: }
+   235:
+   236: // Sprintf formats according to a format specifier and returns the resulting string.
+   237: func Sprintf(format string, a ...any) string {
+(dlv) s
+> fmt.Printf() /opt/homebrew/Cellar/go/1.25.4/libexec/src/fmt/print.go:233 (PC: 0x10464703c)
+   228: }
+   229:
+   230: // Printf formats according to a format specifier and writes to standard output.
+   231: // It returns the number of bytes written and any write error encountered.
+   232: func Printf(format string, a ...any) (n int, err error) {
+=> 233:         return Fprintf(os.Stdout, format, a...)
+   234: }
+   235:
+   236: // Sprintf formats according to a format specifier and returns the resulting string.
+   237: func Sprintf(format string, a ...any) string {
+   238:         p := newPrinter()
+(dlv) s
+> fmt.Fprintf() /opt/homebrew/Cellar/go/1.25.4/libexec/src/fmt/print.go:222 (PC: 0x104646ef0)
+   217:
+   218: // These routines end in 'f' and take a format string.
+   219:
+   220: // Fprintf formats according to a format specifier and writes to w.
+   221: // It returns the number of bytes written and any write error encountered.
+=> 222: func Fprintf(w io.Writer, format string, a ...any) (n int, err error) {
+   223:         p := newPrinter()
+   224:         p.doPrintf(format, a)
+   225:         n, err = w.Write(p.buf)
+   226:         p.free()
+   227:         return
+(dlv) s
+> fmt.Fprintf() /opt/homebrew/Cellar/go/1.25.4/libexec/src/fmt/print.go:223 (PC: 0x104646f24)
+   218: // These routines end in 'f' and take a format string.
+   219:
+   220: // Fprintf formats according to a format specifier and writes to w.
+   221: // It returns the number of bytes written and any write error encountered.
+   222: func Fprintf(w io.Writer, format string, a ...any) (n int, err error) {
+=> 223:         p := newPrinter()
+   224:         p.doPrintf(format, a)
+   225:         n, err = w.Write(p.buf)
+   226:         p.free()
+   227:         return
+   228: }
+(dlv) stepout
+People:
+> fmt.Printf() /opt/homebrew/Cellar/go/1.25.4/libexec/src/fmt/print.go:233 (PC: 0x10464706c)
+Values returned:
+        n: 8
+        err: error nil
+
+   228: }
+   229:
+   230: // Printf formats according to a format specifier and writes to standard output.
+   231: // It returns the number of bytes written and any write error encountered.
+   232: func Printf(format string, a ...any) (n int, err error) {
+=> 233:         return Fprintf(os.Stdout, format, a...)
+   234: }
+   235:
+   236: // Sprintf formats according to a format specifier and returns the resulting string.
+   237: func Sprintf(format string, a ...any) string {
+   238:         p := newPrinter()
+(dlv) stepout
+> main.main() ./main.go:49 (PC: 0x10464dec8)
+Values returned:
+        n: 8
+        err: error nil
+
+    44: func main() {
+    45:         people := make([]*Person, 25)
+    46:         people = populate(people)
+    47:
+    48:         fmt.Printf("People:\n")
+=>  49:         for _, p := range people {
+    50:                 fmt.Printf("%v\n", *p)
+    51:         }
+    52:         fmt.Printf("\n")
+    53:
+    54:         p := findPerson(people, "Sue")
+(dlv) continue
+{John 302 56}
+{Jane 547 90}
+{Bob 679 55}
+{Alice 315 44}
+{Tom 781 78}
+{Sally 471 32}
+{Mike 673 51}
+{Sue 129 89}
+{Bill 768 64}
+{Lily 428 64}
+{Aaron 220 41}
+{John 538 10}
+{Jane 783 11}
+{Bob 68 96}
+{Alice 546 92}
+{Tom 840 71}
+{Sally 618 10}
+{Mike 549 46}
+{Sue 301 55}
+{Bill 108 80}
+{Lily 994 39}
+{Aaron 525 8}
+{John 10 50}
+{Jane 28 39}
+{Bob 276 53}
+```
