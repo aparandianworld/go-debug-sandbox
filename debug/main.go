@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
 )
@@ -47,14 +48,17 @@ func main() {
 
 	fmt.Printf("People:\n")
 	for _, p := range people {
-		fmt.Printf("%v\n", *p)
+		// fmt.Printf("%v\n", *p)
+		log.Printf("[INFO] %v\n", *p)
 	}
 	fmt.Printf("\n")
 
 	p := findPerson(people, "Sue")
 	if p != nil {
-		fmt.Printf("Found: %v\n", *p)
+		// fmt.Printf("Found: %v\n", *p)
+		log.Printf("[INFO] Found: %v\n", *p)
 	} else {
-		fmt.Printf("Not found: %+v\n", *p)
+		// fmt.Printf("Not found: %+v\n", *p)
+		log.Printf("[ERROR] Not found: %+v\n", *p)
 	}
 }
